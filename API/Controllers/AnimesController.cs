@@ -1,24 +1,16 @@
+using Application.Animes;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Persistence;
 
 namespace API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class AnimesController : ControllerBase
+    public class AnimesController : BaseApiController
     {
-        private readonly DataContext _context;
-
-        public AnimesController(DataContext context)
-        {
-            _context = context;
-        }
-
         [HttpGet]
         public async Task<IActionResult> List()
         {
-            return Ok(await _context.Animes.ToListAsync());
+            return HandleResult(await Mediator.Send(new List.Query()));
         }
     }
 }
