@@ -10,5 +10,24 @@ namespace Persistence
         }
 
         public DbSet<Anime> Animes { get; set; }
+        public DbSet<Genre> Genres { get; set; }
+        public DbSet<AnimeGenre> AnimeGenres { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+
+            builder.Entity<AnimeGenre>(x => x.HasKey(ag => new {ag.AnimeId, ag.GenreId}));
+            
+            builder.Entity<AnimeGenre>()
+                .HasOne(ag => ag.Anime)
+                .WithMany(a => a.Genres)
+                .HasForeignKey(ag => ag.AnimeId);
+            
+            builder.Entity<AnimeGenre>()
+                .HasOne(ag => ag.Genre)
+                .WithMany(g => g.Animes)
+                .HasForeignKey(ag => ag.GenreId);
+        }
     }
 }

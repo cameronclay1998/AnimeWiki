@@ -1,6 +1,6 @@
-namespace Domain
+namespace Application.Animes
 {
-    public class Anime
+    public class AnimeDto
     {
         public Guid Id { get; set; }
         public string Title { get; set; } = string.Empty;
@@ -8,6 +8,6 @@ namespace Domain
         public string Description { get; set; } = string.Empty;
         public string AuthorFirstName { get; set; } = string.Empty;
         public string AuthorLastName { get; set; } = string.Empty;
-        public ICollection<AnimeGenre> Genres { get; set; } = [];
+        public ICollection<string> Genres { get; set; } = [];
     }
 }

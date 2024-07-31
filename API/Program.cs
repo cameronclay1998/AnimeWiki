@@ -1,4 +1,5 @@
 using Application.Animes;
+using Application.Core;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 
@@ -26,6 +27,7 @@ builder.Services.AddCors(opt =>
 
 builder.Services.AddMediatR(config =>
     config.RegisterServicesFromAssembly(typeof(List.Handler).Assembly));
+builder.Services.AddAutoMapper(typeof(MappingProfiles).Assembly);
 
 var app = builder.Build();
 
@@ -51,7 +53,9 @@ try
 {
     var context = services.GetRequiredService<DataContext>();
     await context.Database.MigrateAsync();
+    await Seed.SeedGenres(context);
     await Seed.SeedAnimes(context);
+    await Seed.SeedAnimeGenres(context);
 }
 catch (Exception ex)
 {
