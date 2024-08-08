@@ -6,3 +6,20 @@ body {
     background-color: #111111;
     color: #ffffffe6;
 }
+
+.dark-theme {
+    background-color: #1b1c1d !important;
+}
+
+.dark-theme div, a {
+    color: #ffffffe6 !important;
+}
+
+.dark-theme input, textarea {
+    color: purple !important;
+    background-color: #2d2e2f !important;
+}
+
+.dark-theme input::placeholder, textarea::placeholder {
+    color: #ffffffb3 !important;
+}

@@ -1,3 +1,5 @@
+using Application.Genres;
+
 namespace Application.Animes
 {
     public class AnimeDto

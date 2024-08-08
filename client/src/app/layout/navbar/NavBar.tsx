@@ -1,4 +1,4 @@
-import { Button, Menu } from "semantic-ui-react";
+import { Menu } from "semantic-ui-react";
 import './navbar-styles.css'
 
 export default function NavBar() {
@@ -10,12 +10,8 @@ export default function NavBar() {
             </Menu.Item>
             <Menu.Menu>
                 <Menu.Item name='Animes' />
-                <Menu.Item name='Menu Item 2' />
-                <Menu.Item name='Menu Item 3' />
+                <Menu.Item name='Genres' />
             </Menu.Menu>
-            <Menu.Item position='right'>
-                <Button content='Create Anime' color='purple' />
-            </Menu.Item>
         </Menu>
     )
 }
