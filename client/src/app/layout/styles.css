@@ -13,10 +13,11 @@ body {
 
 .dark-theme div, a {
     color: #ffffffe6 !important;
+    background-color: #1b1c1d !important;
 }
 
 .dark-theme input, textarea {
-    color: purple !important;
+    color: #ffffffb3 !important;
     background-color: #2d2e2f !important;
 }
 
