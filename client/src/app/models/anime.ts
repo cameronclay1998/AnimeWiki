@@ -7,4 +7,14 @@ export interface Anime {
     authorLastName: string
     genres: string[]
   }
+
+  export const blankAnime = {
+      id: '',
+      title: '',
+      releaseDate: '',
+      description: '',
+      authorFirstName: '',
+      authorLastName: '',
+      genres: []
+  }
   

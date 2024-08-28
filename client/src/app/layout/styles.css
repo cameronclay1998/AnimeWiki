@@ -24,3 +24,11 @@ body {
 .dark-theme input::placeholder, textarea::placeholder {
     color: #ffffffb3 !important;
 }
+
+.genre-selector-grid {
+    margin: 10px 0px 0px 0px !important;
+}
+
+.genre-selector-column {
+    padding: 0px !important;
+}
