@@ -1,5 +1,7 @@
 using Application.Animes;
 using Application.Core;
+using Application.Interfaces;
+using Infrastructure.Photos;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 
@@ -25,9 +27,10 @@ builder.Services.AddCors(opt =>
     });
 });
 
-builder.Services.AddMediatR(config =>
-    config.RegisterServicesFromAssembly(typeof(List.Handler).Assembly));
+builder.Services.AddMediatR(config => config.RegisterServicesFromAssembly(typeof(List.Handler).Assembly));
 builder.Services.AddAutoMapper(typeof(MappingProfiles).Assembly);
+builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("Cloudinary"));
+builder.Services.AddScoped<IPhotoAccessor, PhotoAccessor>();
 
 var app = builder.Build();
 
