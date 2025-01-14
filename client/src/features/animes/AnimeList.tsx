@@ -1,15 +1,13 @@
-import { Button, ButtonGroup, Container, Item, Segment } from "semantic-ui-react"
-import { Anime } from "../../../app/models/anime"
+import { Button, ButtonGroup, Container, Item } from "semantic-ui-react"
 import './anime-list.css'
 import AnimeGenreList from "./AnimeGenreList"
+import { observer } from "mobx-react-lite"
+import { useStore } from "../../app/stores/store"
 
-interface Props {
-    animes: Anime[]
-    handleSelectAnime: (id: string) => void
-    handleDeleteAnime: (id: string) => void
-}
+export default observer(function AnimeList() {
+    const { animeStore } = useStore();
+    const { animes, setSelectedAnime, deleteAnime } = animeStore;
 
-export default function AnimeList({ animes, handleSelectAnime, handleDeleteAnime }: Props) {
     return (
         <Container className='dark-theme'>
             {
@@ -27,21 +25,21 @@ export default function AnimeList({ animes, handleSelectAnime, handleDeleteAnime
                                             <Item.Extra>
                                                 <ButtonGroup floated="right">
                                                     <Button
-                                                        onClick={() => { handleDeleteAnime(anime.id) }}
+                                                        onClick={() => { deleteAnime(anime.id) }}
                                                         floated='right'
                                                         inverted
                                                         content='Delete'
                                                         color='red'
                                                     />
                                                     <Button
-                                                        onClick={() => { handleSelectAnime(anime.id) }}
+                                                        onClick={() => { setSelectedAnime(anime) }}
                                                         floated='right'
                                                         inverted
                                                         content='View'
                                                         color='purple'
                                                     />
                                                 </ButtonGroup>
-                                                <AnimeGenreList anime={anime} />
+                                                <AnimeGenreList/>
                                             </Item.Extra>
                                         </Item.Content>
                                     </Item>
@@ -52,4 +50,4 @@ export default function AnimeList({ animes, handleSelectAnime, handleDeleteAnime
             }
         </Container>
     )
-}
+})

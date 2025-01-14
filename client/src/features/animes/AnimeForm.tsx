@@ -1,24 +1,14 @@
 import { Button, Grid, Form, Segment } from "semantic-ui-react";
-import { Anime } from "../../../app/models/anime";
-import AnimeGenreList from "../dashboard/AnimeGenreList";
 import { ChangeEvent, useEffect, useState } from "react";
-import { Genre } from "../../../app/models/genre";
 import axios from "axios";
+import { Genre } from "../../app/models/genre";
+import { useStore } from "../../app/stores/store";
+import AnimeGenreList from "./AnimeGenreList";
 
-interface Props {
-    selectedAnime: Anime
-    handleCancelSelectAnime: () => void
-    handleFormClose: () => void
-    setSelectedAnime: (newAnime: Anime) => void,
-    handleSubmit: () => void
-}
+export default function AnimeForm() {
+    const {animeStore} = useStore();
+    const {selectedAnime, setSelectedAnime, createAnime, updateAnime, toggleEditing} = animeStore;
 
-export default function AnimeForm({ 
-    handleFormClose, 
-    selectedAnime, 
-    setSelectedAnime, 
-    handleSubmit
-}: Props) {
     const [genres, setGenres] = useState<Genre[]>([]);
     const [selectedGenre, setSelectedGenre] = useState('');
 
@@ -40,6 +30,13 @@ export default function AnimeForm({
         setSelectedAnime({ ...selectedAnime, [name]: value });
     }
 
+    const handleSubmit = () => {
+        if (selectedAnime.id) updateAnime();
+        else createAnime();
+    }
+
+    const handleFormClose = () => toggleEditing();
+
     return (
         <Segment clearing className='dark-theme'>
             <h3>Edit/Create</h3>
@@ -49,7 +46,7 @@ export default function AnimeForm({
                 <Form.TextArea placeholder='Description' value={selectedAnime.description} name='description' onChange={handleChange} />
                 <Form.Input placeholder='Author First Name' value={selectedAnime.authorFirstName} name='authorFirstName' onChange={handleChange} />
                 <Form.Input placeholder='Author Last Name' value={selectedAnime.authorLastName} name='authorLastName' onChange={handleChange} />
-                <AnimeGenreList anime={selectedAnime} />
+                <AnimeGenreList />
                 <Grid className='genre-selector-grid'>
                     <Grid.Column width='10' className='genre-selector-column'>
                         <Form.Select
