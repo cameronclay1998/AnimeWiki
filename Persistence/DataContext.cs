@@ -12,6 +12,7 @@ namespace Persistence
         public DbSet<Anime> Animes { get; set; }
         public DbSet<Genre> Genres { get; set; }
         public DbSet<AnimeGenre> AnimeGenres { get; set; }
+        public DbSet<Photo> Photos { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

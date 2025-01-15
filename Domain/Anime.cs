@@ -9,5 +9,6 @@ namespace Domain
         public string AuthorFirstName { get; set; } = string.Empty;
         public string AuthorLastName { get; set; } = string.Empty;
         public ICollection<AnimeGenre> Genres { get; set; } = [];
+        public ICollection<Photo> Photos { get; set; } = [];
     }
 }
