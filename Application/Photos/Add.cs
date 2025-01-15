@@ -11,7 +11,7 @@ namespace Application.Photos
     {
         public class Command : IRequest<Result<Photo>>
         {
-            public required string AnimeId { get; set; }
+            public required Guid AnimeId { get; set; }
             public required IFormFile File { get; set; }
         }
 
