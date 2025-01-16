@@ -5,10 +5,11 @@ import { observer } from "mobx-react-lite";
 import { useStore } from "../../app/stores/store";
 import AnimeForm from "./AnimeForm";
 import AnimeDetails from "./AnimeDetails";
+import './animes.css';
 
 export default observer(function AnimeDashboard() {
     const {animeStore} = useStore();
-    const {fetchAnimes, toggleEditing, editing} = animeStore;
+    const {fetchAnimes, toggleEditing, editing, selectedAnime} = animeStore;
 
     useEffect(() => {fetchAnimes()}, [])
 
@@ -32,11 +33,11 @@ export default observer(function AnimeDashboard() {
                 </Grid.Column>
             </Grid>
             <Grid>
-                <Grid.Column width='10'>
+                <Grid.Column width='10' className='anime-list-container'>
                     <AnimeList />
                 </Grid.Column>
                 <Grid.Column width='6'>
-                    {editing ? <AnimeForm /> : <AnimeDetails />}
+                    {editing ? <AnimeForm /> : (selectedAnime.id ? <AnimeDetails /> : null)}
                 </Grid.Column>
             </Grid>
         </Container>

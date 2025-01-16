@@ -1,0 +1,7 @@
+/* This file is meant for styling involing the entire animes feature. */
+
+.anime-list-container {
+    overflow: auto;
+    max-height: 650px;
+    border: solid white 1px;
+}
