@@ -10,6 +10,19 @@ body {
     color: #ffffffe6;
 }
 
+body ::-webkit-scrollbar {
+    width: 10px; /* Adjust width */
+}
+
+body ::-webkit-scrollbar-thumb {
+    background-color: #555; /* Scrollbar thumb color */
+    border-radius: 5px; /* Optional: Rounded corners */
+}
+
+body ::-webkit-scrollbar-track {
+    background-color: #f0f0f0; /* Scrollbar track color */
+}
+
 .dark-theme {
     background-color: #1b1c1d !important;
 }
