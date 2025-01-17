@@ -20,7 +20,8 @@ export default class AnimeStore {
     }
 
     fetchAnimes = async () => {
-        this.animes = await agent.Animes.list();
+        const animes = await agent.Animes.list();
+        this.animes = animes;
     }
 
     createAnime = async () => {

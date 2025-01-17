@@ -5,7 +5,8 @@ export interface Anime {
     description: string
     authorFirstName: string
     authorLastName: string
-    genres: string[]
+    genres: string[],
+    photos?: Photo[]
   }
 
   export const blankAnime = {
@@ -16,5 +17,11 @@ export interface Anime {
       authorFirstName: '',
       authorLastName: '',
       genres: []
+  }
+
+  export interface Photo {
+    id: string;
+    url: string;
+    isMain: boolean;
   }
   

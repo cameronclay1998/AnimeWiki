@@ -6,3 +6,7 @@
     border: solid white 1px;
     border-radius: 5px;
 }
+
+.anime-details {
+    background-color: blue !important;
+}

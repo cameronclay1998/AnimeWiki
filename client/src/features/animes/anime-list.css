@@ -3,7 +3,8 @@
     border-bottom: solid #999999cc 1px !important;
 }
 
-.anime-genre-list div {
+.anime-genre-list-item-content {
     background-color: #2d2e2f !important;
-    color: #ffffffb3 !important
+    color: #ffffffb3 !important;
+    padding: 5px;
 }

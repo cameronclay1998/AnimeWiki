@@ -46,7 +46,7 @@ export default function AnimeForm() {
                 <Form.TextArea placeholder='Description' value={selectedAnime.description} name='description' onChange={handleChange} />
                 <Form.Input placeholder='Author First Name' value={selectedAnime.authorFirstName} name='authorFirstName' onChange={handleChange} />
                 <Form.Input placeholder='Author Last Name' value={selectedAnime.authorLastName} name='authorLastName' onChange={handleChange} />
-                <AnimeGenreList />
+                <AnimeGenreList anime={selectedAnime} />
                 <Grid className='genre-selector-grid'>
                     <Grid.Column width='10' className='genre-selector-column'>
                         <Form.Select

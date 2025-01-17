@@ -1,20 +1,20 @@
 import { List } from "semantic-ui-react"
-import { observer } from "mobx-react-lite"
-import { useStore } from "../../app/stores/store"
+import { Anime } from "../../app/models/anime";
 
-export default observer(function AnimeGenreList() {
-    const {animeStore} = useStore();
-    const {selectedAnime} = animeStore;
+interface Props {
+    anime: Anime;
+}
 
+export default function AnimeGenreList({anime}: Props) {
     return (
         <List className='anime-genre-list' horizontal>
-            {selectedAnime.genres.map(genre => {
+            {anime.genres.map(genre => {
                 return (
                     <List.Item key={genre}>
-                        <List.Content><p>{genre}</p></List.Content>
+                        <List.Content><p className='anime-genre-list-item-content'>{genre}</p></List.Content>
                     </List.Item>
                 )
             })}
         </List>
     )
-})
+}
