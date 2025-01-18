@@ -1,7 +1,6 @@
 using Application.Core;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using Domain;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
@@ -31,6 +30,7 @@ namespace Application.Animes
             {
                 var animes = await _context.Animes
                     .ProjectTo<AnimeDto>(_mapper.ConfigurationProvider)
+                    .OrderBy(a => a.Title)
                     .ToListAsync();
                     
                 return Result<List<AnimeDto>>.Success(animes);

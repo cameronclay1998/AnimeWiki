@@ -11,7 +11,7 @@ export default function NavBar() {
             </Menu.Item>
             <Menu.Menu>
                 <Menu.Item as={NavLink} to='/animes' name='Animes' />
-                <Menu.Item name='Genres' />
+                <Menu.Item name='Shop' />
             </Menu.Menu>
         </Menu>
     )
