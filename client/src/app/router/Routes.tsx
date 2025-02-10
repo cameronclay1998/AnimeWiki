@@ -2,7 +2,9 @@ import { createBrowserRouter, RouteObject } from "react-router-dom";
 import App from "../layout/App";
 import HomePage from "../../features/home/HomePage";
 import AnimeDashboard from "../../features/animes/AnimeDashboard";
-import AnimeDetails from "../../features/animes/AnimeDetails";
+import AnimeDetails from "../../features/animes/anime-details/AnimeDetails";
+import MangaDashboard from "../../features/manga/MangaDashboard";
+import ShopDashboard from "../../features/shop/ShopDashboard";
 
 export const routes: RouteObject[] = [
     {
@@ -11,7 +13,9 @@ export const routes: RouteObject[] = [
         children: [
             {path: '', element: <HomePage />},
             {path: 'animes', element: <AnimeDashboard />},
-            {path: 'anime-details', element: <AnimeDetails />}
+            {path: 'anime-details', element: <AnimeDetails />},
+            {path: 'manga', element: <MangaDashboard />},
+            {path: 'shop', element: <ShopDashboard />}
         ]
     }
 ]

@@ -2,7 +2,7 @@ html, body {
     overflow: hidden;
 }
 .app-container {
-    margin-top: 7em;
+    height: 100vh;
 }
 
 body {

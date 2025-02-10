@@ -1,6 +1,7 @@
-import { useState, MouseEvent } from "react";
-import { Input, Menu, MenuItemProps, Segment } from "semantic-ui-react";
+import { useState, MouseEvent, useCallback } from "react";
+import { Container, Input, Menu, MenuItemProps, Segment } from "semantic-ui-react";
 import About from "./tabs/About";
+import NotImplemented from "../../../app/common/NotImplemented";
 
 enum Tabs {
     ABOUT = 'about',
@@ -12,6 +13,8 @@ enum Tabs {
 const AnimeDetailsMenu = () => {
     const [activeTab, setActiveTab] = useState(Tabs.ABOUT);
 
+    const isActiveTab = useCallback((tab: string) => activeTab === tab, [activeTab]);
+
     const handleItemClick = (_e: MouseEvent<HTMLAnchorElement>, data: MenuItemProps) => {
         if (data.name && Object.values(Tabs).includes(data.name as Tabs)) {
             setActiveTab(data.name as Tabs);
@@ -19,29 +22,29 @@ const AnimeDetailsMenu = () => {
     }
 
     return (
-        <>
+        <Container fluid style={{height: '100%'}}>
             <Menu attached='top' tabular>
                 <Menu.Item
                     name={Tabs.ABOUT}
-                    active={activeTab === Tabs.ABOUT}
+                    active={isActiveTab(Tabs.ABOUT)}
                     onClick={handleItemClick}
                     content='About'
                 />
                 <Menu.Item
                     name={Tabs.CHARACTERS}
-                    active={activeTab === Tabs.CHARACTERS}
+                    active={isActiveTab(Tabs.CHARACTERS)}
                     onClick={handleItemClick}
                     content='Characters'
                 />
                 <Menu.Item
                     name={Tabs.EPISODES}
-                    active={activeTab === Tabs.EPISODES}
+                    active={isActiveTab(Tabs.EPISODES)}
                     onClick={handleItemClick}
                     content='Episodes'
                 />
                 <Menu.Item
                     name={Tabs.CHAPTERS}
-                    active={activeTab === Tabs.CHAPTERS}
+                    active={isActiveTab(Tabs.CHAPTERS)}
                     onClick={handleItemClick}
                     content='Chapters'
                 />
@@ -55,10 +58,13 @@ const AnimeDetailsMenu = () => {
                     </Menu.Item>
                 </Menu.Menu>
             </Menu>
-            <Segment attached='bottom' className='dark-theme'>
-                <About />
+            <Segment attached='bottom' className='dark-theme' style={{height: '100%'}}>
+                {isActiveTab(Tabs.ABOUT) && <About />}
+                {isActiveTab(Tabs.CHARACTERS) && <NotImplemented />}
+                {isActiveTab(Tabs.EPISODES) && <NotImplemented />}
+                {isActiveTab(Tabs.CHAPTERS) && <NotImplemented />}
             </Segment>
-        </>
+        </Container>
     )
 }
 

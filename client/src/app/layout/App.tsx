@@ -4,12 +4,10 @@ import { Outlet } from "react-router-dom";
 
 function App() {
   return (
-    <>
+    <Container className='app-container'>
       <NavBar />
-      <Container className='app-container'>
-        <Outlet />
-      </Container>
-    </>
+      <Outlet />
+    </Container>
   )
 }
 

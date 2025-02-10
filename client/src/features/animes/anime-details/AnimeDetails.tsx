@@ -1,10 +1,10 @@
 import { Image, Button, Grid } from "semantic-ui-react";
 import { observer } from "mobx-react-lite";
-import { useStore } from "../../app/stores/store";
-import { blankAnime } from "../../app/models/anime";
-import './animes.css';
+import { useStore } from "../../../app/stores/store";
+import { blankAnime } from "../../../app/models/anime";
+import '../animes.css';
 import { useNavigate } from "react-router-dom";
-import AnimeDetailsMenu from "./anime-details/AnimeDetailsMenu";
+import AnimeDetailsMenu from "../anime-details/AnimeDetailsMenu";
 
 export default observer(function AnimeDetails() {
     const navigate = useNavigate();
@@ -20,7 +20,7 @@ export default observer(function AnimeDetails() {
     return (
         <Grid>
             <Grid.Row>
-                <Button content='Back' onClick={returnToList} />
+                <Button content='Back' onClick={returnToList} color='purple' inverted />
             </Grid.Row>
             <Grid.Row>
                 <Grid.Column floated='left' width={6}>

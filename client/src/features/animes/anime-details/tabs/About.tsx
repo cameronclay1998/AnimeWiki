@@ -1,6 +1,6 @@
 import { observer } from "mobx-react-lite"
 import { useStore } from "../../../../app/stores/store"
-import { Button, Card } from "semantic-ui-react";
+import { Button, Card, Container } from "semantic-ui-react";
 import { blankAnime } from "../../../../app/models/anime";
 
 const About = () => {
@@ -8,8 +8,8 @@ const About = () => {
     const { selectedAnime, toggleEditing, setSelectedAnime } = animeStore;
     const { isAdmin } = accountStore;
     return (
-        <>
-            <Card className='dark-theme'>
+        <Container fluid>
+            <Card className='dark-theme' style={{width: '100%'}}>
                 <Card.Content>
                     <Card.Header>{selectedAnime.title}</Card.Header>
                     <Card.Meta>
@@ -28,7 +28,7 @@ const About = () => {
                     </Card.Content>
                 )}
             </Card>
-        </>
+        </Container>
     )
 }
 
