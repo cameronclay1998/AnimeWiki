@@ -34,6 +34,11 @@ namespace Application.Animes
 
                 anime.Id = Guid.NewGuid();
 
+                foreach (var photo in anime.Photos)
+                {
+                    photo.Id = Guid.NewGuid().ToString();
+                }
+
                 _context.Animes.Add(anime);
 
                 var availableGenres = await _context.Genres.ToListAsync();

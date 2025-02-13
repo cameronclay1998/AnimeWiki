@@ -14,7 +14,8 @@ namespace Application.Core
                 .ForMember(d => d.Id, o => o.MapFrom(s => s.Id.ToString()));
             CreateMap<AnimeDto, Anime>()
                 .ForMember(d => d.Genres, o => o.Ignore())
-                .ForMember(d => d.Id, o => o.MapFrom(s => string.IsNullOrEmpty(s.Id) ? Guid.Empty : Guid.Parse(s.Id)));
+                .ForMember(d => d.Id, o => o.MapFrom(s => string.IsNullOrEmpty(s.Id) ? Guid.Empty : Guid.Parse(s.Id)))
+                .ForMember(d => d.Photos, o => o.Ignore());
             CreateMap<Genre, GenreDto>();
         }
     }

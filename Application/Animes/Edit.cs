@@ -34,6 +34,7 @@ namespace Application.Animes
                 
                 var anime = await _context.Animes
                     .Include(x => x.Genres)
+                    .Include(x => x.Photos)
                     .SingleOrDefaultAsync(x => x.Id == id);
 
                 if (anime == null)
@@ -42,6 +43,8 @@ namespace Application.Animes
                 }
 
                 _mapper.Map(animeDto, anime);
+
+                HandlePhotoUpdates(animeDto, anime);
 
                 // Handle genre changes
                 var currentGenres = anime.Genres;
@@ -77,6 +80,26 @@ namespace Application.Animes
                 _mapper.Map(anime, animeDto);
 
                 return Result<AnimeDto>.Success(animeDto);
+            }
+
+            private static void HandlePhotoUpdates(AnimeDto dto, Anime anime)
+            {
+                var existingIds = anime.Photos.Select(p => p.Id);
+                var newIds = dto.Photos.Select(p => p.Id);
+
+                var deleteList = anime.Photos.Where(p => !newIds.Contains(p.Id)).ToList();
+                var createList = dto.Photos.Where(p => !existingIds.Contains(p.Id)).ToList();
+
+                foreach (var photo in deleteList)
+                {
+                    anime.Photos.Remove(photo);
+                }
+
+                foreach (var photo in createList)
+                {
+                    photo.Id = Guid.NewGuid().ToString();
+                    anime.Photos.Add(photo);
+                }
             }
         }
     }
