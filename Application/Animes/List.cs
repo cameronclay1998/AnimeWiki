@@ -29,6 +29,7 @@ namespace Application.Animes
                 CancellationToken cancellationToken)
             {
                 var animes = await _context.Animes
+                    .Take(500)
                     .ProjectTo<AnimeDto>(_mapper.ConfigurationProvider)
                     .OrderBy(a => a.Title)
                     .ToListAsync();

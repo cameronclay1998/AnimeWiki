@@ -10,8 +10,6 @@ export default observer(function AnimeDashboard() {
     const {fetchAnimes, toggleEditing} = animeStore;
     const {isAdmin} = accountStore;
 
-    useEffect(() => { fetchAnimes() }, [])
-
     return (
         <Container fluid>
             <Grid>
