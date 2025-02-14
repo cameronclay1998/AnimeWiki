@@ -1,4 +1,3 @@
-using Application.Genres;
 using Domain;
 
 namespace Application.Animes

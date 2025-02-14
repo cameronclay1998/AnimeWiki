@@ -23,7 +23,8 @@ namespace Persistence
             builder.Entity<AnimeGenre>()
                 .HasOne(ag => ag.Anime)
                 .WithMany(a => a.Genres)
-                .HasForeignKey(ag => ag.AnimeId);
+                .HasForeignKey(ag => ag.AnimeId)
+                .OnDelete(DeleteBehavior.Cascade);
             
             builder.Entity<AnimeGenre>()
                 .HasOne(ag => ag.Genre)
@@ -35,7 +36,8 @@ namespace Persistence
             builder.Entity<MangaGenre>()
                 .HasOne(mg => mg.Manga)
                 .WithMany(m => m.Genres)
-                .HasForeignKey(mg => mg.MangaId);
+                .HasForeignKey(mg => mg.MangaId)
+                .OnDelete(DeleteBehavior.Cascade);
             
             builder.Entity<MangaGenre>()
                 .HasOne(mg => mg.Genre)

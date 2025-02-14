@@ -1,5 +1,6 @@
 using Application.Core;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Persistence;
 
 namespace Application.Animes
@@ -25,7 +26,10 @@ namespace Application.Animes
             {
                 var id = request.Id;
 
-                var anime = await _context.Animes.FindAsync(id);
+                var anime = await _context.Animes
+                    .Include(a => a.Genres)
+                    .Include(a => a.Photos)
+                    .SingleOrDefaultAsync(a => a.Id == id);
 
                 if (anime == null)
                 {
