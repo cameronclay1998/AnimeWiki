@@ -5,5 +5,6 @@ namespace Domain
         public Guid Id { get; set; }
         public string Name { get; set; } = string.Empty;
         public ICollection<AnimeGenre> Animes { get; set; } = [];
+        public ICollection<MangaGenre> Mangas { get; set; } = [];
     }
 }
