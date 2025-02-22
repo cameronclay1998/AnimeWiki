@@ -62,6 +62,30 @@ namespace Persistence.Migrations
                     b.ToTable("AnimeGenres");
                 });
 
+            modelBuilder.Entity("Domain.Character", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("About")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("MangaId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MangaId");
+
+                    b.ToTable("Characters");
+                });
+
             modelBuilder.Entity("Domain.Genre", b =>
                 {
                     b.Property<Guid>("Id")
@@ -126,6 +150,9 @@ namespace Persistence.Migrations
                     b.Property<Guid?>("AnimeId")
                         .HasColumnType("TEXT");
 
+                    b.Property<Guid?>("CharacterId")
+                        .HasColumnType("TEXT");
+
                     b.Property<bool>("IsMain")
                         .HasColumnType("INTEGER");
 
@@ -139,6 +166,8 @@ namespace Persistence.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("AnimeId");
+
+                    b.HasIndex("CharacterId");
 
                     b.HasIndex("MangaId");
 
@@ -162,6 +191,17 @@ namespace Persistence.Migrations
                     b.Navigation("Anime");
 
                     b.Navigation("Genre");
+                });
+
+            modelBuilder.Entity("Domain.Character", b =>
+                {
+                    b.HasOne("Domain.Manga", "Manga")
+                        .WithMany("Characters")
+                        .HasForeignKey("MangaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Manga");
                 });
 
             modelBuilder.Entity("Domain.MangaGenre", b =>
@@ -189,6 +229,10 @@ namespace Persistence.Migrations
                         .WithMany("Photos")
                         .HasForeignKey("AnimeId");
 
+                    b.HasOne("Domain.Character", null)
+                        .WithMany("Photos")
+                        .HasForeignKey("CharacterId");
+
                     b.HasOne("Domain.Manga", null)
                         .WithMany("Photos")
                         .HasForeignKey("MangaId");
@@ -201,6 +245,11 @@ namespace Persistence.Migrations
                     b.Navigation("Photos");
                 });
 
+            modelBuilder.Entity("Domain.Character", b =>
+                {
+                    b.Navigation("Photos");
+                });
+
             modelBuilder.Entity("Domain.Genre", b =>
                 {
                     b.Navigation("Animes");
@@ -210,6 +259,8 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Domain.Manga", b =>
                 {
+                    b.Navigation("Characters");
+
                     b.Navigation("Genres");
 
                     b.Navigation("Photos");

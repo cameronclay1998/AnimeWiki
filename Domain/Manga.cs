@@ -7,7 +7,8 @@ namespace Domain
         public DateTime Published { get; set; }
         public string Description { get; set; } = string.Empty;
         public string Author { get; set; } = string.Empty;
-        public List<MangaGenre> Genres { get; set; } = [];
-        public List<Photo> Photos { get; set; } = [];
+        public ICollection<MangaGenre> Genres { get; set; } = [];
+        public ICollection<Photo> Photos { get; set; } = [];
+        public ICollection<Character> Characters { get; set; } = [];
     }
 }

@@ -13,6 +13,7 @@ namespace Persistence
         public DbSet<Photo> Photos { get; set; }
         public DbSet<Manga> Mangas { get; set; }
         public DbSet<MangaGenre> MangaGenres { get; set; }
+        public DbSet<Character> Characters { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -43,6 +44,11 @@ namespace Persistence
                 .HasOne(mg => mg.Genre)
                 .WithMany(g => g.Mangas)
                 .HasForeignKey(mg => mg.GenreId);
+
+            builder.Entity<Manga>()
+                .HasMany(m => m.Characters)
+                .WithOne(c => c.Manga)
+                .HasForeignKey(c => c.MangaId);
         }
     }
 }

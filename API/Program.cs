@@ -1,3 +1,4 @@
+using API.ApiServices.JikanService;
 using Application.Animes;
 using Application.Core;
 using Application.Interfaces;
@@ -13,6 +14,18 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddHttpClient<JikanService>((serviceProvider, httpClient) =>
+{
+    httpClient.BaseAddress = new Uri("https://api.jikan.moe/v4/");
+})
+.ConfigurePrimaryHttpMessageHandler(() => 
+{
+    return new SocketsHttpHandler
+    {
+        PooledConnectionLifetime = TimeSpan.FromMinutes(5)
+    };
+});
 
 builder.Services.AddDbContext<DataContext>(opt =>
 {
@@ -54,16 +67,19 @@ var services = scope.ServiceProvider;
 
 try
 {
-    var context = services.GetRequiredService<DataContext>();
-    await context.Database.MigrateAsync();
-    await Seed.SeedGenres(context);
-    await Seed.SeedAnimes(context);
-    await Seed.SeedAnimeGenres(context);
+    // var context = services.GetRequiredService<DataContext>();
+    // await context.Database.MigrateAsync();
+    // await Seed.SeedGenres(context);
+    // await Seed.SeedAnimes(context);
+    // await Seed.SeedAnimeGenres(context);
+
+    var jikan = services.GetRequiredService<JikanService>();
+    await jikan.SeedMangaCharacters();
 }
 catch (Exception ex)
 {
     var logger = services.GetRequiredService<ILogger<Program>>();
-    logger.LogError(ex, "An error occurred during migration.");
+    logger.LogError(ex, "An error occurred.");
 }
 
 app.Run();
