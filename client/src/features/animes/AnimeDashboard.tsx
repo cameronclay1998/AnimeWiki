@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { Button, Container, Grid, Menu } from "semantic-ui-react";
 import AnimeList from "./anime-list/AnimeList";
 import { observer } from "mobx-react-lite";
@@ -7,7 +6,7 @@ import './animes.css';
 
 export default observer(function AnimeDashboard() {
     const {animeStore, accountStore} = useStore();
-    const {fetchAnimes, toggleEditing} = animeStore;
+    const {toggleEditing} = animeStore;
     const {isAdmin} = accountStore;
 
     return (

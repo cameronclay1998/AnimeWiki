@@ -1,5 +1,6 @@
 import axios, { AxiosResponse } from 'axios';
 import { Anime } from '../models/anime';
+import Manga from '../models/manga';
 
 axios.defaults.baseURL = 'http://localhost:5000/api';
 
@@ -20,8 +21,13 @@ const Animes = {
     delete: (id: string) => requests.delete<void>(`animes/${id}`)
 }
 
+const Mangas = {
+    list: () => requests.get<Manga[]>('/mangas')
+}
+
 const agent = {
-    Animes
+    Animes,
+    Mangas
 }
 
 export default agent;

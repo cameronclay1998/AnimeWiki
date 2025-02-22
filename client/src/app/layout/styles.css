@@ -3,6 +3,7 @@ html, body {
 }
 .app-container {
     height: 100vh;
+    padding-top: 75px;
 }
 
 body {

@@ -1,3 +1,5 @@
+import { Photo } from "./photo"
+
 export interface Anime {
     id: string
     title: string
@@ -17,11 +19,5 @@ export interface Anime {
       authorFirstName: '',
       authorLastName: '',
       genres: []
-  }
-
-  export interface Photo {
-    id: string;
-    url: string;
-    isMain: boolean;
   }
   
