@@ -1,4 +1,5 @@
 using Application.Animes;
+using Application.Characters;
 using Application.Genres;
 using Application.Mangas;
 using AutoMapper;
@@ -27,6 +28,11 @@ namespace Application.Core
             
             CreateMap<MangaDto, Manga>()
                 .ForMember(d => d.Genres, o => o.Ignore())
+                .ForMember(d => d.Id, o => o.MapFrom(s => string.IsNullOrEmpty(s.Id) ? Guid.Empty : Guid.Parse(s.Id)))
+                .ForMember(d => d.Photos, o => o.Ignore());
+
+            CreateMap<Character, CharacterDto>();
+            CreateMap<CharacterDto, Character>()
                 .ForMember(d => d.Id, o => o.MapFrom(s => string.IsNullOrEmpty(s.Id) ? Guid.Empty : Guid.Parse(s.Id)))
                 .ForMember(d => d.Photos, o => o.Ignore());
         }
