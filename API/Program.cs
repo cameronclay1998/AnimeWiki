@@ -74,7 +74,7 @@ try
     // await Seed.SeedAnimeGenres(context);
 
     var jikan = services.GetRequiredService<JikanService>();
-    await jikan.SeedMangaCharacters();
+    await jikan.SeedCharacters();
 }
 catch (Exception ex)
 {

@@ -16,39 +16,75 @@ namespace API.ApiServices.JikanService
             _mediator = mediator;
         }
 
-        public async Task SeedMangaCharacters()
+        // public async Task SeedMangaCharacters()
+        // {
+        //     bool has_next_page = true;
+        //     int page = 1;
+
+        //     while (has_next_page)
+        //     {
+        //         var mangaContent = await CreateRequest<MangaContent>($"manga?page={page}");
+
+        //         foreach (var manga in mangaContent.Data)
+        //         {
+        //             await _mediator.Send(new BulkCreate.Command
+        //             {
+        //                 Dtos = await CreateNewCharactersFromManga(manga)
+        //             });
+        //         }
+
+        //         has_next_page = mangaContent.Pagination.Has_next_page;
+        //         page++;
+        //     }
+        // }
+
+        public async Task SeedCharacters()
         {
             bool has_next_page = true;
             int page = 1;
 
-            var newCharacters = new List<CharacterDto>();
+            var charactersListResponse = await _mediator.Send(new Application.Characters.List.Query());
+
+            if (!charactersListResponse.IsSuccess || charactersListResponse.Value == null)
+            {
+                throw new Exception($"Characters list response resulted in error. Error: {charactersListResponse.Error}");
+            }
+
+            var jikanIds = charactersListResponse.Value.Select(x => x.JikanId);
 
             while (has_next_page)
             {
-                var mangaContent = await CreateRequest<MangaContent>($"manga?page={page}");
+                var charactersContent = await CreateRequest<CharactersContent>($"characters?page={page}");
+                
+                var newCharacters = new List<CharacterDto>();
 
-                foreach (var manga in mangaContent.Data)
+                foreach (var jikanCharacter in charactersContent.Data)
                 {
-                    await AddCharactersToList(manga, newCharacters);
+                    if (!jikanIds.Contains(jikanCharacter.Mal_id))
+                    {
+                        newCharacters.Add(CreateCharacter(jikanCharacter));
+                    }
                 }
+                
+                await _mediator.Send(new BulkCreate.Command { Dtos = newCharacters });
 
-                has_next_page = mangaContent.Pagination.Has_next_page;
+                has_next_page = charactersContent.Pagination.Has_next_page;
                 page++;
             }
-
-            await _mediator.Send(new BulkCreate.Command { Dtos = newCharacters });
         }
 
-        private async Task AddCharactersToList(JikanManga jikanManga, List<CharacterDto> newCharacters)
+        private async Task<List<CharacterDto>> CreateNewCharactersFromManga(JikanManga jikanManga)
         {
             var mangaCharactersContent = await CreateRequest<MangaCharactersContent>($"manga/{jikanManga.Mal_id}/characters");
+
+            var newCharacters = new List<CharacterDto>();
 
             foreach (var item in mangaCharactersContent.Data)
             {
                 var jikanCharacter = item.Character;
                 var id = jikanCharacter.Mal_id;
 
-                var charactersContent = await CreateRequest<CharactersContent>($"characters/{id}");
+                var charactersContent = await CreateRequest<CharactersByIdContent>($"characters/{id}");
 
                 jikanCharacter = charactersContent.Data;
 
@@ -84,6 +120,8 @@ namespace API.ApiServices.JikanService
                     newCharacters.Add(CreateCharacter(jikanCharacter, manga.Id));
                 }
             }
+
+            return newCharacters;
         }
 
         /// <summary>
@@ -118,7 +156,7 @@ namespace API.ApiServices.JikanService
             return mangaCreateResponse.Value;
         }
 
-        private CharacterDto CreateCharacter(JikanCharacter character, string mangaId)
+        private CharacterDto CreateCharacter(JikanCharacter character, string? mangaId = null)
         {
             return new CharacterDto
             {
@@ -132,7 +170,8 @@ namespace API.ApiServices.JikanService
                             IsMain = true
                         }
                     },
-                MangaId = mangaId
+                MangaId = mangaId,
+                JikanId = character.Mal_id
             };
         }
 

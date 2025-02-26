@@ -72,7 +72,10 @@ namespace Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("MangaId")
+                    b.Property<int>("JikanId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<Guid?>("MangaId")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
@@ -197,9 +200,7 @@ namespace Persistence.Migrations
                 {
                     b.HasOne("Domain.Manga", "Manga")
                         .WithMany("Characters")
-                        .HasForeignKey("MangaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("MangaId");
 
                     b.Navigation("Manga");
                 });
