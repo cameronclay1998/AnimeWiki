@@ -8,5 +8,6 @@ namespace Application.Characters
         public string Name { get; set; } = string.Empty;
         public string About { get; set; } = string.Empty;
         public ICollection<Photo> Photos { get; set; } = [];
+        public string? MangaId { get; set; }
     }
 }

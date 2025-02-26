@@ -1,6 +1,5 @@
 using Application.Core;
 using AutoMapper;
-using Domain;
 using MediatR;
 using Persistence;
 
@@ -27,16 +26,8 @@ namespace Application.Characters
             public async Task<Result<CharacterDto>> Handle(Command request, CancellationToken cancellationToken)
             {
                 var dto = request.Dto;
-                var character = _mapper.Map<Character>(dto);
 
-                character.Id = Guid.NewGuid();
-
-                // Handle photos
-                foreach (var photo in dto.Photos)
-                {
-                    photo.Id = Guid.NewGuid().ToString();
-                    character.Photos.Add(photo);
-                }
+                var character = Utils.CreateCharacterFromDto(dto, _mapper);
 
                 _context.Characters.Add(character);
                 await _context.SaveChangesAsync();

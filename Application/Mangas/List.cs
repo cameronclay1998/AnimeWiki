@@ -11,7 +11,7 @@ namespace Application.Mangas
     {
         public class Query : IRequest<Result<List<MangaDto>>>
         {
-
+            public MangaParams? Params { get; set; }
         }
 
         public class Handler : IRequestHandler<Query, Result<List<MangaDto>>>
@@ -24,15 +24,25 @@ namespace Application.Mangas
                 _context = context;
                 _mapper = mapper;
             }
-            
+
             public async Task<Result<List<MangaDto>>> Handle(Query request, CancellationToken cancellationToken)
             {
-                var dtos = await _context.Mangas
-                    .Take(500)
+                var dtos = _context.Mangas
                     .ProjectTo<MangaDto>(_mapper.ConfigurationProvider)
-                    .ToListAsync();
+                    .AsQueryable();
 
-                return Result<List<MangaDto>>.Success(dtos);
+                var queryParams = request.Params;
+
+                if (queryParams != null && !string.IsNullOrEmpty(queryParams.Title))
+                {
+                    dtos = dtos.Where(x => x.Title == queryParams.Title);
+                }
+                else
+                {
+                    dtos = dtos.Take(500);
+                }
+
+                return Result<List<MangaDto>>.Success(await dtos.ToListAsync());
             }
         }
     }
