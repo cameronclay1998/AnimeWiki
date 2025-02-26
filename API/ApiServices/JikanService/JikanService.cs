@@ -1,5 +1,6 @@
 using Application.Characters;
 using Application.Mangas;
+using Application.SeedProcesses;
 using Domain;
 using MediatR;
 
@@ -40,14 +41,50 @@ namespace API.ApiServices.JikanService
 
         public async Task SeedCharacters()
         {
+            const string SEED_CHARACTERS_PROCESS = "SeedCharacters";
+
+            var seedProcessListResponse = await _mediator.Send(new Application.SeedProcesses.List.Query
+            {
+                Params = new SeedProcessParams
+                {
+                    Name = SEED_CHARACTERS_PROCESS
+                }
+            });
+
+            if (!seedProcessListResponse.IsSuccess || seedProcessListResponse.Value == null)
+            {
+                throw new Exception("Problem occurred while trying to fetch "
+                    + $"the seed process information. Error: {seedProcessListResponse.Error}");
+            }
+
+            var seedProcess = seedProcessListResponse.Value.SingleOrDefault();
+
+            if (seedProcess == null)
+            {
+                var seedProcessCreateResponse = await _mediator.Send(new Application.SeedProcesses.Create.Command
+                {
+                    Dto = new SeedProcessDto
+                    {
+                        Name = SEED_CHARACTERS_PROCESS
+                    }
+                });
+
+                if (!seedProcessCreateResponse.IsSuccess || seedProcessCreateResponse.Value == null)
+                {
+                    throw new Exception($"Seed process create resulted in an Error. Error: {seedProcessCreateResponse.Error}");
+                }
+
+                seedProcess = seedProcessCreateResponse.Value;
+            }
+            
             bool has_next_page = true;
-            int page = 1;
+            int page = seedProcess.Counter;
 
             var charactersListResponse = await _mediator.Send(new Application.Characters.List.Query());
 
             if (!charactersListResponse.IsSuccess || charactersListResponse.Value == null)
             {
-                throw new Exception($"Characters list response resulted in error. Error: {charactersListResponse.Error}");
+                throw new Exception($"Characters list response resulted in an error. Error: {charactersListResponse.Error}");
             }
 
             var jikanIds = charactersListResponse.Value.Select(x => x.JikanId);
@@ -70,59 +107,75 @@ namespace API.ApiServices.JikanService
 
                 has_next_page = charactersContent.Pagination.Has_next_page;
                 page++;
-            }
-        }
 
-        private async Task<List<CharacterDto>> CreateNewCharactersFromManga(JikanManga jikanManga)
-        {
-            var mangaCharactersContent = await CreateRequest<MangaCharactersContent>($"manga/{jikanManga.Mal_id}/characters");
-
-            var newCharacters = new List<CharacterDto>();
-
-            foreach (var item in mangaCharactersContent.Data)
-            {
-                var jikanCharacter = item.Character;
-                var id = jikanCharacter.Mal_id;
-
-                var charactersContent = await CreateRequest<CharactersByIdContent>($"characters/{id}");
-
-                jikanCharacter = charactersContent.Data;
-
-                // Find related manga by title
-                var mangasResponse = await _mediator.Send(new Application.Mangas.List.Query { Params = new MangaParams { Title = jikanManga.Title } });
-
-                if (!mangasResponse.IsSuccess || mangasResponse.Value == null) continue;
-
-                var manga = mangasResponse.Value.FirstOrDefault();
-
-                if (manga == null)
+                // Update seed process record
+                var seedProcessEditResponse = await _mediator.Send(new Application.SeedProcesses.Edit.Command
                 {
-                    manga = await CreateManga(jikanManga);
-                }
-
-                // Check if character exists by manga id and character name
-                var characterResponse = await _mediator.Send(
-                    new Application.Characters.List.Query
+                    Dto = new SeedProcessDto
                     {
-                        Params = new CharacterParams
-                        {
-                            MangaId = manga.Id,
-                            Name = jikanCharacter.Name
-                        }
-                    });
+                        Name = seedProcess.Name,
+                        Counter = page
+                    },
+                    Id = Guid.Parse(seedProcess.Id ?? throw new Exception("Seed process Id was null."))
+                });
 
-                if (!characterResponse.IsSuccess || characterResponse.Value == null) continue;
-
-                var character = characterResponse.Value.FirstOrDefault();
-
-                if (character == null)
+                if (!seedProcessEditResponse.IsSuccess)
                 {
-                    newCharacters.Add(CreateCharacter(jikanCharacter, manga.Id));
+                    throw new Exception($"SeedProcess edit resulted in an error. Error: {seedProcessEditResponse.Error}");
                 }
             }
-
-            return newCharacters;
         }
+
+        // private async Task<List<CharacterDto>> CreateNewCharactersFromManga(JikanManga jikanManga)
+        // {
+        //     var mangaCharactersContent = await CreateRequest<MangaCharactersContent>($"manga/{jikanManga.Mal_id}/characters");
+
+        //     var newCharacters = new List<CharacterDto>();
+
+        //     foreach (var item in mangaCharactersContent.Data)
+        //     {
+        //         var jikanCharacter = item.Character;
+        //         var id = jikanCharacter.Mal_id;
+
+        //         var charactersContent = await CreateRequest<CharactersByIdContent>($"characters/{id}");
+
+        //         jikanCharacter = charactersContent.Data;
+
+        //         // Find related manga by title
+        //         var mangasResponse = await _mediator.Send(new Application.Mangas.List.Query { Params = new MangaParams { Title = jikanManga.Title } });
+
+        //         if (!mangasResponse.IsSuccess || mangasResponse.Value == null) continue;
+
+        //         var manga = mangasResponse.Value.FirstOrDefault();
+
+        //         if (manga == null)
+        //         {
+        //             manga = await CreateManga(jikanManga);
+        //         }
+
+        //         // Check if character exists by manga id and character name
+        //         var characterResponse = await _mediator.Send(
+        //             new Application.Characters.List.Query
+        //             {
+        //                 Params = new CharacterParams
+        //                 {
+        //                     MangaId = manga.Id,
+        //                     Name = jikanCharacter.Name
+        //                 }
+        //             });
+
+        //         if (!characterResponse.IsSuccess || characterResponse.Value == null) continue;
+
+        //         var character = characterResponse.Value.FirstOrDefault();
+
+        //         if (character == null)
+        //         {
+        //             newCharacters.Add(CreateCharacter(jikanCharacter, manga.Id));
+        //         }
+        //     }
+
+        //     return newCharacters;
+        // }
 
         /// <summary>
         /// Create new manga based on jikan manga.

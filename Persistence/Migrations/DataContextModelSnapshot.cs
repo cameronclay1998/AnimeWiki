@@ -177,6 +177,24 @@ namespace Persistence.Migrations
                     b.ToTable("Photos");
                 });
 
+            modelBuilder.Entity("Domain.SeedProcess", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Counter")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SeedProcesses");
+                });
+
             modelBuilder.Entity("Domain.AnimeGenre", b =>
                 {
                     b.HasOne("Domain.Anime", "Anime")

@@ -14,6 +14,7 @@ namespace Persistence
         public DbSet<Manga> Mangas { get; set; }
         public DbSet<MangaGenre> MangaGenres { get; set; }
         public DbSet<Character> Characters { get; set; }
+        public DbSet<SeedProcess> SeedProcesses { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
