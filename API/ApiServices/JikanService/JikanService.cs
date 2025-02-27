@@ -17,27 +17,49 @@ namespace API.ApiServices.JikanService
             _mediator = mediator;
         }
 
-        // public async Task SeedMangaCharacters()
-        // {
-        //     bool has_next_page = true;
-        //     int page = 1;
+        public async Task LoopThroughManga()
+        {
+            bool has_next_page = true;
+            int page = 1;
 
-        //     while (has_next_page)
-        //     {
-        //         var mangaContent = await CreateRequest<MangaContent>($"manga?page={page}");
+            // Grab all characters to save round trips
+            var charactersResponse = await _mediator.Send(new Application.Characters.List.Query());
 
-        //         foreach (var manga in mangaContent.Data)
-        //         {
-        //             await _mediator.Send(new BulkCreate.Command
-        //             {
-        //                 Dtos = await CreateNewCharactersFromManga(manga)
-        //             });
-        //         }
+            if (!charactersResponse.IsSuccess || charactersResponse.Value == null)
+            {
+                throw new Exception($"An error occurred while attempting to fetch all characters. Error: {charactersResponse.Error}");
+            }
 
-        //         has_next_page = mangaContent.Pagination.Has_next_page;
-        //         page++;
-        //     }
-        // }
+            var allCharacters = charactersResponse.Value;
+
+            while (has_next_page)
+            {
+                var mangaContent = await CreateRequest<MangaContent>($"manga?page={page}");
+
+                foreach (var manga in mangaContent.Data)
+                {
+                    await LinkCharactersToManga(manga, allCharacters);
+                }
+
+                has_next_page = mangaContent.Pagination.Has_next_page;
+                page++;
+            }
+        }
+
+        private async Task<MangaDto?> FetchManga(JikanManga jikanManga)
+        {
+            var mangasResponse = await _mediator.Send(new Application.Mangas.List.Query
+            {
+                Params = new MangaParams { Title = jikanManga.Title }
+            });
+
+            if (!mangasResponse.IsSuccess || mangasResponse.Value == null)
+            {
+                throw new Exception($"An error occurred while attempting to grab the existing manga. Error: {mangasResponse.Error}");
+            }
+
+            return mangasResponse.Value.FirstOrDefault();
+        }
 
         public async Task SeedCharacters()
         {
@@ -126,56 +148,84 @@ namespace API.ApiServices.JikanService
             }
         }
 
-        // private async Task<List<CharacterDto>> CreateNewCharactersFromManga(JikanManga jikanManga)
-        // {
-        //     var mangaCharactersContent = await CreateRequest<MangaCharactersContent>($"manga/{jikanManga.Mal_id}/characters");
+        private async Task LinkCharactersToManga(JikanManga jikanManga, List<CharacterDto> allCharacters)
+        {
+            // Get existing manga, if it doesn't exist, skip
+            var manga = await FetchManga(jikanManga);
 
-        //     var newCharacters = new List<CharacterDto>();
+            if (manga == null) return;
 
-        //     foreach (var item in mangaCharactersContent.Data)
-        //     {
-        //         var jikanCharacter = item.Character;
-        //         var id = jikanCharacter.Mal_id;
+            // Get jikan characters for jikan manga
+            var mangaCharactersContent = await CreateRequest<MangaCharactersContent>($"manga/{jikanManga.Mal_id}/characters");
+            
+            // Loop through characters and create a list to add to the existing manga's character list
+            var updatedCharacters = new List<CharacterDto>();
 
-        //         var charactersContent = await CreateRequest<CharactersByIdContent>($"characters/{id}");
+            foreach (var item in mangaCharactersContent.Data)
+            {
+                var jikanCharacter = item.Character;
 
-        //         jikanCharacter = charactersContent.Data;
+                // Grab our character, if it doesn't exist, skip
+                // var characterResponse = await _mediator.Send(new Application.Characters.List.Query
+                // {
+                //     Params = new CharacterParams
+                //     {
+                //         Name = jikanCharacter.Name,
+                //         JikanId = jikanCharacter.Mal_id
+                //     }
+                // });
 
-        //         // Find related manga by title
-        //         var mangasResponse = await _mediator.Send(new Application.Mangas.List.Query { Params = new MangaParams { Title = jikanManga.Title } });
+                // if (!characterResponse.IsSuccess || characterResponse.Value == null) continue;
 
-        //         if (!mangasResponse.IsSuccess || mangasResponse.Value == null) continue;
+                // var character = characterResponse.Value.FirstOrDefault();
 
-        //         var manga = mangasResponse.Value.FirstOrDefault();
+                var character = allCharacters.SingleOrDefault(c => c.JikanId == jikanCharacter.Mal_id);
 
-        //         if (manga == null)
-        //         {
-        //             manga = await CreateManga(jikanManga);
-        //         }
+                if (character != null)
+                {
+                    character.MangaId = manga.Id;
+                    updatedCharacters.Add(character);
+                }
+            }
 
-        //         // Check if character exists by manga id and character name
-        //         var characterResponse = await _mediator.Send(
-        //             new Application.Characters.List.Query
-        //             {
-        //                 Params = new CharacterParams
-        //                 {
-        //                     MangaId = manga.Id,
-        //                     Name = jikanCharacter.Name
-        //                 }
-        //             });
+            // Save changes
+            if (updatedCharacters.Count > 0)
+            {
+                await _mediator.Send(new BulkEdit.Command { Dtos = updatedCharacters });
+            }
+        }
 
-        //         if (!characterResponse.IsSuccess || characterResponse.Value == null) continue;
+        public async Task Cleanup()
+        {
+            // Grab all characters to save round trips
+            var charactersResponse = await _mediator.Send(new Application.Characters.List.Query());
 
-        //         var character = characterResponse.Value.FirstOrDefault();
+            if (!charactersResponse.IsSuccess || charactersResponse.Value == null)
+            {
+                throw new Exception($"An error occurred while attempting to fetch all characters. Error: {charactersResponse.Error}");
+            }
 
-        //         if (character == null)
-        //         {
-        //             newCharacters.Add(CreateCharacter(jikanCharacter, manga.Id));
-        //         }
-        //     }
+            var allCharacters = charactersResponse.Value;
 
-        //     return newCharacters;
-        // }
+            var ids = new List<string>();
+
+            for (int i = 0; i < 2000; i++)
+            {
+                var characters = allCharacters.Where(x => x.JikanId == i);
+                if (characters.Count() > 1)
+                {
+                    var id = characters.First().Id;
+
+                    if (!string.IsNullOrEmpty(id))
+                    {
+                        ids.Add(id);
+                    }
+                }
+            }
+
+            // Call a delete
+            await _mediator.Send(new BulkDelete.Command { Ids = ids });
+        }
 
         /// <summary>
         /// Create new manga based on jikan manga.

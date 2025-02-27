@@ -4,5 +4,6 @@ namespace Application.Characters
     {
         public string? MangaId { get; set; }
         public string? Name { get; set; }
+        public int? JikanId { get; set; }
     }
 }

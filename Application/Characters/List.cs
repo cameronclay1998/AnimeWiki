@@ -37,6 +37,7 @@ namespace Application.Characters
                 {
                     var mangaId = queryParams.MangaId;
                     var name = queryParams.Name;
+                    var jikanId = queryParams.JikanId;
 
                     if (!string.IsNullOrEmpty(mangaId))
                     {
@@ -47,10 +48,15 @@ namespace Application.Characters
                     {
                         dtos = dtos.Where(x => x.Name == name);
                     }
+
+                    if (jikanId.HasValue)
+                    {
+                        dtos = dtos.Where(x => x.JikanId == jikanId.Value);
+                    }
                 }
                 else
                 {
-                    dtos = dtos.Take(500);
+                    // dtos = dtos.Take(500);
                 }
 
                 return Result<List<CharacterDto>>.Success(await dtos.ToListAsync());
