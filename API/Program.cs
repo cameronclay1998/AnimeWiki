@@ -67,15 +67,15 @@ var services = scope.ServiceProvider;
 
 try
 {
-    // var context = services.GetRequiredService<DataContext>();
-    // await context.Database.MigrateAsync();
+    var context = services.GetRequiredService<DataContext>();
+    await context.Database.MigrateAsync();
     // await Seed.SeedGenres(context);
     // await Seed.SeedAnimes(context);
     // await Seed.SeedAnimeGenres(context);
 
-    var jikan = services.GetRequiredService<JikanService>();
+    // var jikan = services.GetRequiredService<JikanService>();
     // await jikan.SeedCharacters();
-    await jikan.LoopThroughManga();
+    // await jikan.LoopThroughManga();
     // await jikan.Cleanup();
 }
 catch (Exception ex)
