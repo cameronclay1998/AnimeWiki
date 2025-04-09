@@ -16,9 +16,16 @@ export default observer(function AnimeList() {
 
     useEffect(() => {
         const handleAsync = async () => {
-            setLoading(true);
-            await fetchAnimes();
-            setLoading(false);
+            try {
+                setLoading(true);
+                await fetchAnimes();
+            }
+            catch (error) {
+                console.log(error)
+            }
+            finally {
+                setLoading(false);
+            }
         }
         handleAsync();
     }, [])

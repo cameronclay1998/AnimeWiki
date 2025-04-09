@@ -9,15 +9,15 @@ export interface Anime {
     authorLastName: string
     genres: string[],
     photos?: Photo[]
-  }
+}
 
-  export const blankAnime = {
-      id: '',
-      title: '',
-      releaseDate: '',
-      description: '',
-      authorFirstName: '',
-      authorLastName: '',
-      genres: []
-  }
+export const blankAnime = {
+    id: '',
+    title: '',
+    releaseDate: '',
+    description: '',
+    authorFirstName: '',
+    authorLastName: '',
+    genres: []
+}
   

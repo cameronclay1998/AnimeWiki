@@ -15,9 +15,16 @@ export default observer(function MangaList() {
 
     useEffect(() => {
         const handleAsync = async () => {
-            setLoading(true);
-            await fetchMangas();
-            setLoading(false);
+            try {
+                setLoading(true);
+                await fetchMangas();
+            }
+            catch (error) {
+                console.log(error);
+            }
+            finally {
+                setLoading(false);
+            }
         }
         handleAsync();
     }, [])

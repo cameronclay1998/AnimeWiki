@@ -1,8 +1,11 @@
 import axios, { AxiosResponse } from 'axios';
 import { Anime } from '../models/anime';
 import Manga from '../models/manga';
+import { JikanManga, mapToManga } from '../models/jikan-manga';
 
-axios.defaults.baseURL = 'http://localhost:5000/api';
+const useJikan = true;
+
+axios.defaults.baseURL = useJikan ? 'https://api.jikan.moe/v4' : 'http://localhost:5000/api';
 
 const responseBody = <T> (response: AxiosResponse<T>) => response.data;
 
@@ -21,7 +24,20 @@ const Animes = {
     delete: (id: string) => requests.delete<void>(`animes/${id}`)
 }
 
-const Mangas = {
+interface JikanMangaResponse {
+    pagination: Pagination,
+    data: JikanManga[]
+}
+
+interface Pagination {
+    last_visible_page: number,
+    has_next_page: boolean
+}
+
+const Mangas = useJikan ? {
+    list: () => requests.get<JikanMangaResponse>('/manga?sfw=true')
+        .then((res): Manga[] => res.data.map(m => mapToManga(m)))
+} : {
     list: () => requests.get<Manga[]>('/mangas')
 }
 

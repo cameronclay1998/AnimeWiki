@@ -1,6 +1,7 @@
 html, body {
     overflow: hidden;
 }
+
 .app-container {
     height: 100vh;
     padding-top: 75px;
