@@ -2,6 +2,7 @@ import axios, { AxiosResponse } from 'axios';
 import { Anime } from '../models/anime';
 import Manga from '../models/manga';
 import { JikanManga, mapToManga } from '../models/jikan-manga';
+import { Character } from '../models/jikan-character';
 
 const useJikan = true;
 
@@ -41,9 +42,23 @@ const Mangas = useJikan ? {
     list: () => requests.get<Manga[]>('/mangas')
 }
 
+interface MangaCharactersResponse {
+    data: CharacterInfo[]
+}
+
+export interface CharacterInfo {
+    character: Character,
+    role: string
+}
+
+const Jikan = {
+    mangaCharacters: (id: string) => requests.get<MangaCharactersResponse>(`/manga/${id}/characters`)
+}
+
 const agent = {
     Animes,
-    Mangas
+    Mangas,
+    Jikan
 }
 
 export default agent;

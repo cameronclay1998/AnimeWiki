@@ -15,9 +15,9 @@ interface Props {
     deleteItem: (id: string) => void
 }
 
-const ListItem = ({ isAdmin, item, openDetails, deleteItem } : Props) => {
+const ListItem = ({ isAdmin, item, openDetails, deleteItem }: Props) => {
     return (
-        <Item key={item.id} onClick={openDetails}>
+        <Item key={item.id}>
             <Item.Image src={item.photoUrl || '/assets/default-item.png'} />
             <Item.Content>
                 <Item.Header as='a'>{item.title}</Item.Header>
@@ -25,8 +25,8 @@ const ListItem = ({ isAdmin, item, openDetails, deleteItem } : Props) => {
                 <Item.Description>{item.description}</Item.Description>
                 <Item.Extra>
                     {/* <AnimeGenreList anime={anime} /> */}
-                    {isAdmin && (
-                        <ButtonGroup style={{ marginTop: '30px' }} floated="right">
+                    <ButtonGroup style={{ marginTop: '30px' }} floated="right">
+                        {isAdmin && (
                             <Button
                                 onClick={() => { deleteItem(item.id) }}
                                 floated='right'
@@ -34,15 +34,15 @@ const ListItem = ({ isAdmin, item, openDetails, deleteItem } : Props) => {
                                 content='DeleteItem'
                                 color='red'
                             />
-                            <Button
-                                onClick={() => { openDetails(item.id) }}
-                                floated='right'
-                                inverted
-                                content='View'
-                                color='purple'
-                            />
-                        </ButtonGroup>
-                    )}
+                        )}
+                        <Button
+                            onClick={() => { openDetails(item.id) }}
+                            floated='right'
+                            inverted
+                            content='View Details'
+                            color='purple'
+                        />
+                    </ButtonGroup>
                 </Item.Extra>
             </Item.Content>
         </Item>

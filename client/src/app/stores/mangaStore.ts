@@ -4,16 +4,21 @@ import agent from "../api/agent";
 
 export default class MangaStore {
     mangas: Manga[] = [];
+    selectedManga: Manga | undefined = undefined;
 
     constructor() {
         makeAutoObservable(this);
     }
 
-    fetchMangas = async () => {
+    fetchManga = async () => {
         this.mangas = await agent.Mangas.list();
     }
 
     deleteManga = () => {
         
+    }
+
+    setSelectedManga = (manga: Manga) => {
+        this.selectedManga = manga;
     }
 }

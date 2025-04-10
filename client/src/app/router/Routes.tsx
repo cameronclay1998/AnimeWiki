@@ -5,6 +5,7 @@ import AnimeDashboard from "../../features/animes/AnimeDashboard";
 import AnimeDetails from "../../features/animes/anime-details/AnimeDetails";
 import MangaDashboard from "../../features/manga/MangaDashboard";
 import ShopDashboard from "../../features/shop/ShopDashboard";
+import MangaDetails from "../../features/manga/MangaDetails";
 
 export const routes: RouteObject[] = [
     {
@@ -15,6 +16,7 @@ export const routes: RouteObject[] = [
             {path: 'animes', element: <AnimeDashboard />},
             {path: 'anime-details', element: <AnimeDetails />},
             {path: 'manga', element: <MangaDashboard />},
+            {path: 'manga-details', element: <MangaDetails />},
             {path: 'shop', element: <ShopDashboard />}
         ]
     }

@@ -9,7 +9,7 @@ html, body {
 
 body {
     background-color: #111111;
-    color: #ffffffe6;
+    /* color: #ffffffe6; */
 }
 
 body ::-webkit-scrollbar {

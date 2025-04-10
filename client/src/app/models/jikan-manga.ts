@@ -10,7 +10,7 @@ export interface JikanManga {
     synopsis: string
 }
 
-interface Images {
+export interface Images {
     jpg: Jpg
 }
 
