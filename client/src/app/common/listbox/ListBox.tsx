@@ -1,5 +1,6 @@
-import { Container, Item } from "semantic-ui-react";
+import { Container, Grid, GridColumn, Item, Placeholder, PlaceholderHeader, PlaceholderImage, PlaceholderLine } from "semantic-ui-react";
 import ListItem, { MyListItem } from "./ListItem";
+import NoContent from "../NoContent";
 
 interface Props {
     loading: boolean,
@@ -17,13 +18,13 @@ const ListBox = ({
     deleteItem 
 } : Props) => {
     return (
-        <Container className='dark-theme'>
+        <Container>
             {
                 loading
-                    ? <div>Loading...</div>
+                    ? <Placeholders />
                     : (
                         data.length < 1
-                            ? <div>No Content.</div>
+                            ? <NoContent />
                             : (
                                 <Item.Group>
                                     {data.map(item => (
@@ -40,6 +41,41 @@ const ListBox = ({
             }
         </Container>
     )
+}
+
+const Placeholders = () => {
+    const placeholders = [];
+    
+    for (let i = 0; i < 50; i++) {
+        placeholders.push(
+            <Grid>
+                <GridColumn width={3}>
+                    <Placeholder inverted style={{ height: 250, width: 175, margin: '0px' }}>
+                        <PlaceholderImage />
+                    </Placeholder>
+                </GridColumn>
+                <GridColumn width={11}>
+                    <Placeholder inverted>
+                    <PlaceholderHeader>
+                        <PlaceholderLine length='short' />
+                    </PlaceholderHeader>
+                    </Placeholder>
+                    <Placeholder style={{ margin: '0px' }} inverted>
+                        <PlaceholderLine length='medium' />
+                    </Placeholder>
+                    <Placeholder fluid inverted>
+                        <PlaceholderLine length='full' />
+                        <PlaceholderLine length='full' />
+                        <PlaceholderLine length='very long' />
+                        <PlaceholderLine length='full'/>
+                        <PlaceholderLine />
+                    </Placeholder>
+                </GridColumn>
+            </Grid>
+        );
+    }
+
+    return placeholders;
 }
 
 export default ListBox;

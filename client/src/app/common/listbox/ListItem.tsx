@@ -17,7 +17,7 @@ interface Props {
 
 const ListItem = ({ isAdmin, item, openDetails, deleteItem }: Props) => {
     return (
-        <Item key={item.id}>
+        <Item key={item.id} className='dark-theme'>
             <Item.Image src={item.photoUrl || '/assets/default-item.png'} />
             <Item.Content>
                 <Item.Header as='a'>{item.title}</Item.Header>

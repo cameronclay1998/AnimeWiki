@@ -5,7 +5,7 @@ import { NavLink } from "react-router-dom";
 export default function NavBar() {
     return (
         <Menu inverted fixed='top'>
-            <Menu.Item as={NavLink} to='/' header className='header'>
+            <Menu.Item as={NavLink} to='/' header style={{paddingRight: '100px'}}>
                 <img className='logo' src='/assets/logo.png' alt='logo' />
                 Anime Wiki
             </Menu.Item>
