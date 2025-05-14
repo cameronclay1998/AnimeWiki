@@ -4,7 +4,7 @@ import { Outlet } from "react-router-dom";
 
 function App() {
   return (
-    <Container className='app-container'>
+    <Container className='app-container' fluid>
       <NavBar />
       <Outlet />
     </Container>

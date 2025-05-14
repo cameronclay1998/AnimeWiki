@@ -3,7 +3,7 @@ import App from "../layout/App";
 import HomePage from "../../features/home/HomePage";
 import AnimeDashboard from "../../features/animes/AnimeDashboard";
 import AnimeDetails from "../../features/animes/anime-details/AnimeDetails";
-import MangaDashboard from "../../features/manga/MangaDashboard";
+import MangaDashboard2 from "../../features/manga/MangaDashboard2";
 import ShopDashboard from "../../features/shop/ShopDashboard";
 import MangaDetails from "../../features/manga/MangaDetails";
 
@@ -15,7 +15,7 @@ export const routes: RouteObject[] = [
             {path: '', element: <HomePage />},
             {path: 'animes', element: <AnimeDashboard />},
             {path: 'anime-details', element: <AnimeDetails />},
-            {path: 'manga', element: <MangaDashboard />},
+            {path: 'manga', element: <MangaDashboard2 />},
             {path: 'manga-details', element: <MangaDetails />},
             {path: 'shop', element: <ShopDashboard />}
         ]
